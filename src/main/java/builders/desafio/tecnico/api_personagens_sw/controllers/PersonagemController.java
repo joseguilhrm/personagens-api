@@ -4,6 +4,7 @@ import builders.desafio.tecnico.api_personagens_sw.dto.DadosCadastroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosNomePersonagem;
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosRegistroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.service.PersonagemService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,9 @@ public class PersonagemController {
     private PersonagemService service;
 
     @GetMapping
-    public ResponseEntity<List<DadosRegistroPersonagem>> obterPersonagensPeloNome(@RequestBody DadosNomePersonagem dados) {
-        List<DadosRegistroPersonagem> personagens = this.service.obterPersonagemPeloNome(dados.nome());
+    public ResponseEntity<List<DadosRegistroPersonagem>> obterPersonagensPeloNome(
+            @RequestParam (required = false) String search) {
+        List<DadosRegistroPersonagem> personagens = this.service.obterPersonagemPeloNome(search);
         return ResponseEntity.ok(personagens);
     }
 
