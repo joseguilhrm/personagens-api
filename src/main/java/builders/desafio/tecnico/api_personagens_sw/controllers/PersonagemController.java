@@ -4,11 +4,14 @@ import builders.desafio.tecnico.api_personagens_sw.dto.DadosCadastroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosRegistroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.service.PersonagemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/personagens")
@@ -17,11 +20,17 @@ public class PersonagemController {
     @Autowired
     private PersonagemService service;
 
-    @GetMapping
-    public ResponseEntity<List<DadosRegistroPersonagem>> obterPersonagensPeloNome(
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> obterPersonagensPeloNome(
             @RequestParam String search) {
         List<DadosRegistroPersonagem> personagens = this.service.obterPersonagemPeloNome(search);
-        return ResponseEntity.ok(personagens);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("count", personagens.size());
+        response.put("next", null);
+        response.put("previous", null);
+        response.put("results", personagens);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
