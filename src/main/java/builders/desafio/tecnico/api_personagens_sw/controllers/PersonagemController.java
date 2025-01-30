@@ -19,7 +19,7 @@ public class PersonagemController {
 
     @GetMapping
     public ResponseEntity<List<DadosRegistroPersonagem>> obterPersonagensPeloNome(
-            @RequestParam (required = false) String search) {
+            @RequestParam String search) {
         List<DadosRegistroPersonagem> personagens = this.service.obterPersonagemPeloNome(search);
         return ResponseEntity.ok(personagens);
     }
