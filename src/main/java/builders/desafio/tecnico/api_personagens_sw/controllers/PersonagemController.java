@@ -1,10 +1,8 @@
 package builders.desafio.tecnico.api_personagens_sw.controllers;
 
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosCadastroPersonagem;
-import builders.desafio.tecnico.api_personagens_sw.dto.DadosNomePersonagem;
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosRegistroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.service.PersonagemService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
