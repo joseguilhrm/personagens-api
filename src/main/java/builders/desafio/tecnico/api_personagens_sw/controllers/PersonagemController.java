@@ -33,10 +33,16 @@ public class PersonagemController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<DadosRegistroPersonagem> cadastrarNovoPersonagem(@RequestBody DadosCadastroPersonagem dados) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> cadastrarNovoPersonagem(@RequestBody DadosCadastroPersonagem dados) {
         DadosRegistroPersonagem personagem = this.service.cadastrarNovoPersonagem(dados);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("count", 1);
+        response.put("next", null);
+        response.put("previous", null);
+        response.put("results", List.of(personagem));
         var uri = UriComponentsBuilder.fromPath("/personagens/" + personagem.nome()).build().toUri();
-        return ResponseEntity.created(uri).body(personagem);
+        return ResponseEntity.created(uri).body(response);
     }
 }
