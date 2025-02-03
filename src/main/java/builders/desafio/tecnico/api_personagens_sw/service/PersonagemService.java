@@ -2,7 +2,8 @@ package builders.desafio.tecnico.api_personagens_sw.service;
 
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosCadastroPersonagem;
 import builders.desafio.tecnico.api_personagens_sw.dto.DadosRegistroPersonagem;
-import builders.desafio.tecnico.api_personagens_sw.dto.DadoCountResponseSwapi;
+import builders.desafio.tecnico.api_personagens_sw.dto.DadosResponseSwapi;
+import builders.desafio.tecnico.api_personagens_sw.dto.DadosResult;
 import builders.desafio.tecnico.api_personagens_sw.model.Personagem;
 import builders.desafio.tecnico.api_personagens_sw.repository.PersonagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,17 @@ public class PersonagemService {
     }
 
     public DadosRegistroPersonagem cadastrarNovoPersonagem(DadosCadastroPersonagem dados) {
-        String nome = dados.nome().replace(" ", "%20");
-
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<DadoCountResponseSwapi> response = restTemplate.getForEntity("https://swapi.dev/api/people?search=" + nome, DadoCountResponseSwapi.class);
+        ResponseEntity<DadosResponseSwapi> response = restTemplate.getForEntity("https://swapi.dev/api/people?search=" + dados.nome(), DadosResponseSwapi.class);
 
-        if (response.getBody().count() >= 1 || this.repository.existsByNome(dados.nome()))
+        if (response.getBody().count() >= 1) {
+            if (response.getBody().results().stream().map(DadosResult::name).anyMatch(n -> n.equals(dados.nome()))) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Personagem já cadastrado.");
+            }
+        }
+        else if (this.repository.existsByNome(dados.nome())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Personagem já cadastrado.");
+        }
 
         return new DadosRegistroPersonagem(this.repository.save(new Personagem(dados)));
     }
